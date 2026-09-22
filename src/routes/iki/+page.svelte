@@ -3,7 +3,7 @@
 	import IkiEditor from '$lib/components/IkiEditor.svelte';
 	import { kalibrasi } from '$lib/calc/kalibrasi';
 	import { data, ikiBaru } from '$lib/state/data.svelte';
-	import { fmt, LABEL_PERIODE, rincianIki, TAHUNAN } from '$lib/state/hitung';
+	import { fmt, LABEL_PERIODE, rincianIki, TAHUNAN, warnaStatus } from '$lib/state/hitung';
 
 	let periode = $state(TAHUNAN);
 	const hasil = $derived(rincianIki(data.ikis, periode));
@@ -64,6 +64,64 @@
 			</p>
 		{/if}
 	</section>
+
+	{#if data.ikis.length}
+		<section class="card" aria-labelledby="judul-ringkasan">
+			<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+				<h2 id="judul-ringkasan" class="judul">
+					Ringkasan capaian {periode < TAHUNAN ? `s.d. ${LABEL_PERIODE[periode]}` : 'tahunan'}
+				</h2>
+				<span class="text-xs text-muted">Telusuri tiap IKI dari angka asalnya sampai menjadi NHK.</span>
+			</div>
+			<div class="mt-3 overflow-x-auto">
+				<table class="tbl min-w-[44rem]">
+					<thead>
+						<tr>
+							<th scope="col">IKI</th>
+							<th scope="col">Target</th>
+							<th scope="col">Realisasi</th>
+							<th scope="col">Capaian</th>
+							<th scope="col">K3</th>
+							<th scope="col">NKC</th>
+							<th scope="col">Bobot</th>
+							<th scope="col">Kontribusi</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each hasil.baris as b, i (data.ikis[i].id)}
+							<tr class={b.dikecualikan ? 'bg-amber-50' : ''}>
+								<th scope="row" class="font-medium text-ink">
+									{b.iki.nama || `IKI ${i + 1}`}
+									{#if b.dikecualikan}
+										<span class="block text-xs font-normal text-amber-800">belum masuk NHK</span>
+									{/if}
+								</th>
+								<td>{fmt(b.konsol?.target ?? null)}</td>
+								<td>{fmt(b.konsol?.realisasi ?? null)}</td>
+								<td class={warnaStatus(b.capaian) === 'merah' ? 'text-red-700' : ''}>{fmt(b.capaian)}</td>
+								<td>{fmt(b.k3.k3)}</td>
+								<td>{fmt(b.nhk.nilaiKualitasCapaian)}</td>
+								<td>{b.nhk.bobotTertimbang === null ? '–' : `${fmt(b.nhk.bobotTertimbang * 100, 1)}%`}</td>
+								<td class="font-semibold">{fmt(b.nhk.kontribusi)}</td>
+							</tr>
+						{/each}
+					</tbody>
+					<tfoot>
+						<tr class="border-t-2 border-line">
+							<th scope="row" colspan="7" class="text-right font-medium text-ink">
+								Jumlah kontribusi = NHK Awal {LABEL_PERIODE[periode]}
+							</th>
+							<td class="font-semibold tabular-nums">{fmt(hasil.nhkAwal)}</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<p class="mt-2 text-xs text-muted">
+				NKC = nilai kualitas capaian (capaian × K3, maksimal 120). Bobot = K3 IKI ini dibagi jumlah K3 seluruh IKI
+				yang dihitung. Kontribusi = NKC × bobot (KMK hal. 125-126).
+			</p>
+		</section>
+	{/if}
 
 	{#each data.ikis as iki, i (iki.id)}
 		<IkiEditor

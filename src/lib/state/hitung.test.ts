@@ -83,3 +83,22 @@ describe('ringkasan with what-if values', () => {
 		expect(ringkasan(d, 4, { nhk: null, npk: null })).toEqual(ringkasan(d, 4));
 	});
 });
+
+describe('numbers behind each capaian', () => {
+	it('exposes the consolidated target & realisasi of the period', () => {
+		const ikis = [iki('A', { konsolidasi: 'sum', realisasi: [9, 11, null, null] })];
+		const b = rincianIki(ikis, 1).baris[0];
+		expect(b.konsol).toEqual({ target: 20, realisasi: 20 });
+		expect(b.capaian).toBe(100);
+	});
+
+	it('consolidates only the quarters that already have a target', () => {
+		const ikis = [iki('B', { konsolidasi: 'sum', target: [10, 10, null, null], realisasi: [9, 11, null, null] })];
+		expect(rincianIki(ikis, 3).baris[0].konsol).toEqual({ target: 20, realisasi: 20 });
+	});
+
+	it('is null when a quarter with a target still lacks realisasi', () => {
+		const ikis = [iki('C', { realisasi: [9, null, null, null] })];
+		expect(rincianIki(ikis, 1).baris[0].konsol).toBeNull();
+	});
+});

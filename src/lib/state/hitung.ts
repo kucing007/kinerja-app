@@ -1,5 +1,5 @@
 // Derives every displayed number from the stored data (pure, no Svelte)
-import { capaianIki, targetTahunan } from '$lib/calc/capaian';
+import { capaianIki, konsolidasiSampai, targetTahunan } from '$lib/calc/capaian';
 import { k3Iki, type RincianK3 } from '$lib/calc/k3';
 import { kalibrasi } from '$lib/calc/kalibrasi';
 import { hitungNhk, type BarisNhk } from '$lib/calc/nhk';
@@ -14,6 +14,8 @@ export const TAHUNAN = 4;
 export interface RincianIki {
 	iki: Iki;
 	targetY: number | null;
+	/** Consolidated target & realisasi the capaian is derived from, so it can be checked */
+	konsol: { target: number; realisasi: number } | null;
 	capaian: number | null;
 	k3: RincianK3;
 	nhk: BarisNhk;
@@ -49,7 +51,13 @@ export function rincianIki(
 	periode: number
 ): { baris: RincianIki[]; nhkAwal: number | null; dikecualikan: string[] } {
 	const sampai = Math.min(periode, 3);
-	const dasar = ikis.map((iki) => ({ iki, targetY: targetTahunan(iki), capaian: capaianIki(iki, sampai), k3: k3Iki(iki) }));
+	const dasar = ikis.map((iki) => ({
+		iki,
+		targetY: targetTahunan(iki),
+		konsol: konsolidasiSampai(iki.target, iki.realisasi, iki.konsolidasi, sampai),
+		capaian: capaianIki(iki, sampai),
+		k3: k3Iki(iki)
+	}));
 	const { baris, nhk } = hitungNhk(dasar.map((d) => ({ capaian: d.capaian, k3: d.k3.k3 })));
 	// IKIs that have a target in the period but no capaian/K3 are left out of NHK weighting;
 	// flag and name them so a partial NHK is never mistaken for a complete one
