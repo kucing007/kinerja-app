@@ -3,6 +3,7 @@
 	import { data, hukdisBaru } from '$lib/state/data.svelte';
 	import { fmt, LABEL_PERIODE } from '$lib/state/hitung';
 	import { sim } from '$lib/state/simulasi.svelte';
+	import { hapusDenganUrungkan } from '$lib/state/urungkan.svelte';
 	import NumInput from './NumInput.svelte';
 
 	interface Props {
@@ -13,7 +14,15 @@
 
 	const label = $derived(LABEL_PERIODE[periode]);
 	const persen = (b: number) => `${fmt(b * 100, 0)}%`;
-	const hapusHukdis = (id: string) => (data.hukdis = data.hukdis.filter((h) => h.id !== id));
+	const hapusHukdis = (i: number) =>
+		hapusDenganUrungkan(
+			() => data.hukdis,
+			(baru) => {
+				data.hukdis = baru;
+			},
+			i,
+			'Hukuman disiplin dihapus.'
+		);
 </script>
 
 <div class="space-y-4">
@@ -27,7 +36,7 @@
 		{/if}
 		{#each data.hukdis as h, i (h.id)}
 			<fieldset
-				class="grid grid-cols-2 items-end gap-2 rounded-lg border border-line p-2 sm:grid-cols-[1.4fr_1fr_1fr_1fr_auto]"
+				class="grid grid-cols-2 items-end gap-2 rounded-lg border border-line p-2"
 				disabled={sim.aktif}
 			>
 				<legend class="sr-only">Hukdis {i + 1}</legend>
@@ -53,11 +62,18 @@
 						{#each [1, 2, 3, 4] as t (t)}<option value={t}>Q{t}</option>{/each}
 					</select>
 				</div>
-				<button type="button" class="btn-ghost text-red-700" onclick={() => hapusHukdis(h.id)}>Hapus</button>
-				<p class="col-span-full text-xs text-muted">
-					Nilai {fmt(nilaiSatuHukdis(h))} = {persen(PERSEN_HUKDIS[h.kategori])} × skor {fmt(h.skorMPJHD, 0)}, berlaku
-					{DURASI_HUKDIS[h.kategori]} triwulan mulai Q{h.triwulan} {h.tahun} dan pada nilai tahunan {h.tahun}.
-				</p>
+				<div class="col-span-full flex items-start justify-between gap-2">
+					<p class="text-xs text-muted">
+						Nilai {fmt(nilaiSatuHukdis(h))} = {persen(PERSEN_HUKDIS[h.kategori])} × skor {fmt(h.skorMPJHD, 0)}, berlaku
+						{DURASI_HUKDIS[h.kategori]} triwulan mulai Q{h.triwulan} {h.tahun} dan pada nilai tahunan {h.tahun}.
+					</p>
+					<button
+						type="button"
+						class="shrink-0 rounded-md px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
+						onclick={() => hapusHukdis(i)}
+						aria-label="Hapus hukdis {i + 1}">Hapus</button
+					>
+				</div>
 			</fieldset>
 		{/each}
 		<div class="flex flex-wrap items-center justify-between gap-2">

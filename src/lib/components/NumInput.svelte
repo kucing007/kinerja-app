@@ -9,9 +9,19 @@
 		/** false = empty input keeps the previous number */
 		nullable?: boolean;
 		class?: string;
+		/** Extra attributes for the <input>, e.g. data-kol for keyboard navigation in grids */
+		[attr: `data-${string}`]: string | number | undefined;
 	}
 
-	let { value = $bindable(), id, label, placeholder = '', nullable = true, class: kelas = '' }: Props = $props();
+	let {
+		value = $bindable(),
+		id,
+		label,
+		placeholder = '',
+		nullable = true,
+		class: kelas = '',
+		...rest
+	}: Props = $props();
 
 	// Accepts Indonesian "1.250,5" as well as "1250.5"
 	function parse(s: string): number | null | undefined {
@@ -43,6 +53,7 @@
 </script>
 
 <input
+	{...rest}
 	type="text"
 	inputmode="decimal"
 	{id}

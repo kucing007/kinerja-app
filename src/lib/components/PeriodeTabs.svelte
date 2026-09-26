@@ -4,12 +4,13 @@
 	let { periode = $bindable() }: { periode: number } = $props();
 </script>
 
-<div class="inline-flex flex-wrap gap-1 rounded-lg border border-line bg-white p-1" role="group" aria-label="Periode">
+<div class="inline-flex gap-0.5 rounded-lg border border-line bg-white p-0.5" role="group" aria-label="Periode">
 	{#each LABEL_PERIODE as label, i (label)}
 		<button
-			class="rounded-md px-3 py-1.5 text-sm font-medium {periode === i
+			type="button"
+			class="rounded-md px-2.5 py-1 text-sm font-medium whitespace-nowrap {periode === i
 				? 'bg-brand text-white'
-				: 'text-muted hover:bg-paper'}"
+				: 'text-muted hover:bg-paper hover:text-ink'}"
 			aria-pressed={periode === i}
 			onclick={() => (periode = i)}>{i < 4 ? `s.d. ${label}` : label}</button
 		>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Predikat } from '$lib/calc/types';
 
-	let { predikat }: { predikat: Predikat | null } = $props();
+	let { predikat, kecil = false }: { predikat: Predikat | null; kecil?: boolean } = $props();
 
 	const WARNA: Record<Predikat, string> = {
 		'Sangat Baik': 'bg-emerald-600 text-white',
@@ -13,7 +13,7 @@
 </script>
 
 <span
-	class="inline-flex rounded-full px-3 py-1 text-sm font-semibold {predikat
+	class="inline-flex rounded-full font-semibold whitespace-nowrap {kecil ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm'} {predikat
 		? WARNA[predikat]
 		: 'bg-paper text-muted'}">{predikat ?? 'Belum lengkap'}</span
 >

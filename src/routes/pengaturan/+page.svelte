@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { data, gantiData, resetData } from '$lib/state/data.svelte';
+	import { setelUlangPeriode } from '$lib/state/periode.svelte';
 	import { eksporJson, imporJson } from '$lib/state/persist';
 
 	let fileInput: HTMLInputElement;
@@ -16,6 +17,7 @@
 		if (!file) return;
 		try {
 			gantiData(await imporJson(file));
+			setelUlangPeriode();
 			pesan = 'Data berhasil diimpor.';
 		} catch (err) {
 			pesan = (err as Error).message;
@@ -26,6 +28,7 @@
 	function reset() {
 		if (confirm('Hapus semua data di browser ini? Ekspor dulu bila ingin menyimpan cadangan.')) {
 			resetData();
+			setelUlangPeriode();
 			pesan = 'Data direset.';
 		}
 	}

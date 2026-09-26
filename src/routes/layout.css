@@ -26,10 +26,10 @@
 		@apply inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-sm font-medium text-white hover:bg-brand/90 disabled:opacity-50;
 	}
 	.btn-ghost {
-		@apply inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-paper;
+		@apply inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-paper disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white;
 	}
 	.input {
-		@apply w-full rounded-lg border-line px-2.5 py-1.5 text-sm tabular-nums focus:border-brand focus:ring-brand;
+		@apply w-full rounded-lg border-line px-2.5 py-1.5 text-sm tabular-nums focus:border-brand focus:ring-brand disabled:cursor-not-allowed disabled:bg-paper disabled:text-muted;
 	}
 	.label {
 		@apply mb-1 block text-xs font-medium text-muted;

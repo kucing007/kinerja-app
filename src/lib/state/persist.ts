@@ -98,6 +98,6 @@ export function eksporJson(data: DataKinerja): void {
 
 export async function imporJson(file: File): Promise<DataKinerja> {
 	const parsed = JSON.parse(await file.text());
-	if (!valid(parsed)) throw new Error('File bukan data Kalkulator Kinerja yang valid');
+	if (!valid(parsed)) throw new Error('File bukan data Kakin yang valid');
 	return lengkapi(parsed);
 }
