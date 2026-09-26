@@ -29,9 +29,13 @@
 <div class="min-h-screen">
 	<header class="border-b border-line bg-white">
 		<div class="mx-auto flex max-w-7xl flex-wrap items-center gap-x-8 gap-y-2 px-4 py-2">
-			<a href={resolve('/')} class="leading-tight">
-				<span class="block text-base font-semibold text-brand">Kakin <span class="font-normal text-muted">– Kalkulator Kinerja</span></span>
-				<span class="block text-xs text-muted">KMK 127/2026 · Non-Pimpinan UPK</span>
+			<a href={resolve('/')} class="flex items-center gap-2.5 leading-tight">
+				<!-- Decorative: the name next to it already says "Kakin" -->
+				<img src={favicon} alt="" width="36" height="36" class="h-9 w-9 shrink-0" />
+				<span>
+					<span class="block text-base font-semibold text-brand">Kakin <span class="font-normal text-muted">– Kalkulator Kinerja</span></span>
+					<span class="block text-xs text-muted">KMK 127/2026 · Non-Pimpinan UPK</span>
+				</span>
 			</a>
 			<nav class="flex gap-1 overflow-x-auto" aria-label="Menu utama">
 				{#each menu as m (m.href)}
